@@ -1,4 +1,4 @@
 Maneki
 ======
 
-Marketing Compaign Management and Vitural Reward Delivery System
+Marketing Compaign Management and Reward Delivery System
