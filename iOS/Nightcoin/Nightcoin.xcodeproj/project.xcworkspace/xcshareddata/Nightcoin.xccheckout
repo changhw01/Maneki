@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>449892C1-08BA-4B57-9C61-FA2B685B94DB</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Nightcoin</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>05801F10-F5FE-4D82-B38A-B1424BB82FE3</key>
+		<string>https://github.com/jackylee0424/nightcoin.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>app/iOS-Nightcoin/Nightcoin/Nightcoin.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>05801F10-F5FE-4D82-B38A-B1424BB82FE3</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/jackylee0424/nightcoin.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>05801F10-F5FE-4D82-B38A-B1424BB82FE3</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>05801F10-F5FE-4D82-B38A-B1424BB82FE3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>nightcoin</string>
+		</dict>
+	</array>
+</dict>
+</plist>
