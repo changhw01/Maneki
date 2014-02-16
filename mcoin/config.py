@@ -1,3 +1,5 @@
+# test wallet 1: Z4n9k9PtyaJe2oMi7HCpN97dpX53Ol6kVC2F1ARYaKKvseOs4In
+
 import landerdb
 
 relay = 1
