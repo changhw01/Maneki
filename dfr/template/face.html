@@ -170,9 +170,9 @@
                     var faceROI = document.createElement('canvas');
                     faceROI.id = "faceROI";
                     document.body.appendChild(faceROI);
-                    faceROI.width = r.width*sc;
-                    faceROI.height = r.height*sc;
-                    faceROI.getContext('2d').drawImage(video, r.x*sc, r.y*sc, r.width*sc, r.height*sc,0,0,r.width*sc, r.height*sc);
+                    faceROI.width = 100;
+                    faceROI.height = 100;
+                    faceROI.getContext('2d').drawImage(video, r.x*sc, r.y*sc, r.width*sc, r.height*sc,0,0,100, 100);
                     var data = faceROI.toDataURL('image/png');
                     if (data.length>10000){
                        //send data to server

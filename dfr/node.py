@@ -28,10 +28,10 @@ class WSocketHandler(tornado.websocket.WebSocketHandler):
         parsed = tornado.escape.json_decode(message)
         d = urllib2.unquote(parsed["base64Data"])
         fname = "%.0f"%(time.time()*1000.0)
-        if not os.path.exists("data//"+self.dir_name):
-            os.makedirs("data//"+self.dir_name)
+        if not os.path.exists("data//raw//"+self.dir_name):
+            os.makedirs("data//raw//"+self.dir_name)
         
-        with open("data//%s//%s.png"%(self.dir_name,fname),"wb") as f:
+        with open("data//raw//%s//%s.png"%(self.dir_name,fname),"wb") as f:
             f.write(base64.b64decode(d.split(',')[1]))
             print "saved to %s.png"%fname
     
