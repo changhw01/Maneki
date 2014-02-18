@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     # hashing model
     t = time.time()
-    print "model hashing: %s took %.3f ms"%(sha256_for_file("data.bin",hr=True),(time.time()-t)*1000.)
+    print "model hashing: %s took %.3f ms"%(sha256_for_file('data//model//data.bin',hr=True),(time.time()-t)*1000.)
 
     with open('data//model//data.bin', 'rb') as input:
         mmodel = pickle.load(input)
