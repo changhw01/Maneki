@@ -23,6 +23,8 @@ def check_coin(obj, data):
     if not difficulty:
         difficulty = []
     difficulty = len(difficulty)/50500 + 5
+    
+    # minimum difficulty
     if difficulty < 5:
         difficulty = 5
 

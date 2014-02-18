@@ -31,19 +31,19 @@ class zCoin:
             }
 
     def firstrun(self):
-        print "Generating address..."
+        print "Generating address and public/private keys"
         pub, priv = rsa.newkeys(1024)
         address = "Z"+''.join([random.choice(string.uppercase+string.lowercase+string.digits) for x in range(50)])
-        print "Your address is: "+address
-        print "Getting nodes..."
+        print "My wallet address: "+address
+        print "Getting nodes from network"
         get_nodes.send(True)
         check = config.nodes.find("nodes", "all")
         if not check:
-            print "It looks like you are the first node on this network."
-            ip = raw_input("What is your IP address? ")
+            print "Seed node (aka no other nodes online)"
+            ip = raw_input("What is your IP address?") ## replace by auto-check?
             config.nodes.insert("nodes", {"public":str(pub), "address":address, "ip":ip, "relay":config.relay, "port":config.port})
             config.nodes.save()
-            config.db.insert("difficulty", {"difficulty":7})
+            config.db.insert("difficulty", {"difficulty":5})
             config.db.save()
         config.wallet.insert("data", {"public":str(pub), "address":address, "private":str(priv)})
         config.wallet.save()
@@ -54,6 +54,7 @@ class zCoin:
         print "Done!"
 
     def relay(self):
+        # relay mode
         get_nodes.send()
         register.send()
         get_db.send()
@@ -64,6 +65,7 @@ class zCoin:
         while True:
             obj, conn = sock.accept()
             thread.start_new_thread(self.handle, (obj, conn[0]))
+
     def handle(self, obj, ip):
         data = obj.recv(10240)
         if data:
@@ -81,6 +83,7 @@ class zCoin:
                         obj.close()
 
     def normal(self):
+        # normal mode
         if not config.relay:
             get_db.send()
             register.send()
