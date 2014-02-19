@@ -50,21 +50,20 @@ def read_data(path, sz=None):
 
 if __name__ == '__main__':
 
-    if len(sys.argv) != 2:
-        print "USAGE: train.py data/raw/"
-        sys.exit()
-
     # need to maintain distributed [img, label] pairs
     # maintain a dict of { label:num, ... } where label can be hashed
     # train model based on [img, num[label]] pairs
 
     ## read images
     t = time.time()
-    X,y = read_data(sys.argv[1])
+    X,y = read_data("data/raw/")
 
     ## save to matrix data
     with open('data//processed//xy.data', 'wb') as output:
         pickle.dump({'X': X, 'y':y}, output, pickle.HIGHEST_PROTOCOL)
+
+    print "%d raw images loaded. took %.3f ms"%(len(X),(time.time()-t)*1000.)
+
 
     with open('data//processed//xy.data', 'rb') as input:
         xydata = pickle.load(input)
