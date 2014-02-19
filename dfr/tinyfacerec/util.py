@@ -50,6 +50,7 @@ def read_cvimages(path, sz=None):
 					if filename !=".DS_Store":
                                                         im = cv2.imread(os.path.join(subject_path, filename))
                                                         im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+                                                        im = cv2.resize(im,(128, 128), interpolation = cv2.INTER_CUBIC)
                                                         im = cv2.equalizeHist(im)
                                                         X.append(im)
                                                         y.append(c)
