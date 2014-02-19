@@ -6,6 +6,7 @@ import os
 import time
 
 def get_db(obj, data):
+    print "sync remote db"
     with open("db.db", 'rb') as file:
         while True:
             data = file.read(100)
@@ -14,6 +15,7 @@ def get_db(obj, data):
             obj.send(data)
 
 def send(god=False):
+    print "ready to sync"
     if god:
         nodes = config.brokers
     else:

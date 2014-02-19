@@ -76,6 +76,8 @@ if __name__ == '__main__':
     model_eigen = EigenfacesModel(xydata['X'][1:], xydata['y'][1:], dist_metric = CosineDistance())
     model_fisher = FisherfacesModel(xydata['X'][1:], xydata['y'][1:], dist_metric = CosineDistance())
 
+    if not os.path.exists("data//model"):
+        os.makedirs("data//model")
     with open('data//model//data.bin', 'wb') as output:
         pickle.dump(dict(eigen=model_eigen, fisher=model_fisher), output, pickle.HIGHEST_PROTOCOL)
 
