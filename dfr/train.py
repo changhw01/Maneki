@@ -6,6 +6,8 @@ from tinyfacerec.distance import CosineDistance
 import pickle
 import time
 import hashlib
+import requests # use firebase for an equivalent p2p hack (just to make it work first)
+import json
 
 ## genesis timestamp
 genesis_ts = 1392697800000
@@ -21,9 +23,9 @@ def sha256_for_file(path, block_size=256*128, hr=False):
         return sha256.hexdigest()
     return sha256.digest()
 
-def imgpreprocess(filename, subject_path):
+def imgpreprocess(filepath):
     import cv2
-    im = cv2.imread(os.path.join(subject_path, filename))
+    im = cv2.imread(filepath)
     im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
     im = cv2.resize(im,(128, 128), interpolation = cv2.INTER_CUBIC)
     im = cv2.equalizeHist(im)
@@ -38,7 +40,7 @@ def read_data(path, sz=None):
 	    for filename in os.listdir(subject_path):
                 try:
                     if filename[-3:] =="png":
-                        im = imgpreprocess(filename, subject_path)
+                        im = imgpreprocess(os.path.join(subject_path, filename))
                         X.append(im)
                         y.append(int(subdirname)-genesis_ts)
                 except IOError:
@@ -54,40 +56,67 @@ if __name__ == '__main__':
     # maintain a dict of { label:num, ... } where label can be hashed
     # train model based on [img, num[label]] pairs
 
+    ## get user account
+    url = "https://dfr.firebaseio.com/.json"
+    response = requests.get(url, data=None)
+    print response.json
+    
     ## read images
     t = time.time()
     X,y = read_data("data/raw/")
 
     ## save to matrix data
-    with open('data//processed//xy.data', 'wb') as output:
-        pickle.dump({'X': X, 'y':y}, output, pickle.HIGHEST_PROTOCOL)
+    filename_temp = os.urandom(8).encode('hex')
+    with open('data//processed//%s.data'%filename_temp, 'wb') as output:
+        pickle.dump({'X': X, 'y':y}, output, pickle.HIGHEST_PROTOCOL) ## X: image, y: label(integer)
 
     print "%d raw images loaded. took %.3f ms"%(len(X),(time.time()-t)*1000.)
 
+    # hashing model as a signature to get the latest model up-to-date
+    t = time.time()
+    data_hash = sha256_for_file('data//processed//%s.data'%filename_temp,hr=True)
 
-    with open('data//processed//xy.data', 'rb') as input:
+    if data_hash==response.json["hash"]:
+        print "old data found. no need to update/sync"
+        os.remove('data//processed//%s.data'%filename_temp)
+    else:
+        print "hashes are different. check data consistency" # each image could have its own hash to make it easier to check(?)
+        ts = time.time()
+        print "hash: %s (took %.3f ms)"%(data_hash,(ts-t)*1000.)
+        print "hash timestamp: %f"%(ts)
+        print "---"
+        print dict(ts=int(ts*1000000),hash=data_hash,filename=filename_temp)
+        print "---"
+
+        t = time.time()
+        requests.patch(url, data=json.dumps(dict(ts=ts, hash=data_hash, filename=filename_temp)))
+        print "sync to firebase. took %.3f ms"%((time.time()-t)*1000.)
+    sys.exit(0)
+
+
+    ## to compute a model, need to merge all the data by simpling appending [X,X,X,...], [y,y,y,...]
+    with open('data//processed//%s.data'%filename_temp, 'rb') as input:
         xydata = pickle.load(input)
-
-    ## to sync up with other .data, just need to append to X, y list
 
     # compute models
     t = time.time()
+
     # train eigen and fisher model (excluding 1st element in each label
     model_eigen = EigenfacesModel(xydata['X'][1:], xydata['y'][1:], dist_metric = CosineDistance())
     model_fisher = FisherfacesModel(xydata['X'][1:], xydata['y'][1:], dist_metric = CosineDistance())
 
     if not os.path.exists("data//model"):
         os.makedirs("data//model")
-    with open('data//model//data.bin', 'wb') as output:
+    with open('data//model//model.bin', 'wb') as output:
         pickle.dump(dict(eigen=model_eigen, fisher=model_fisher), output, pickle.HIGHEST_PROTOCOL)
 
     print "model computed and saved. took %.3f ms"%((time.time()-t)*1000.)
 
-    # hashing model (not used for now)
+    # hashing model as a signature to get the latest model up-to-date
     t = time.time()
-    print "model hashing: %s took %.3f ms"%(sha256_for_file('data//model//data.bin',hr=True),(time.time()-t)*1000.)
+    print "model hashing: %s took %.3f ms"%(sha256_for_file('data//model//model.bin',hr=True),(time.time()-t)*1000.)
 
-    with open('data//model//data.bin', 'rb') as input:
+    with open('data//model//model.bin', 'rb') as input:
         mmodel = pickle.load(input)
 
     # get a prediction for the first observation

@@ -4,10 +4,12 @@ import config
 import random
 
 def send(cmd, out=False, god=False):
+    #print cmd
     if god:
         nodes = config.brokers
     else:
         nodes = config.nodes.find("nodes", {"relay":1})
+        #print nodes
         random.shuffle(nodes)
     if not nodes:
         nodes = config.brokers

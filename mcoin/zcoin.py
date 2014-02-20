@@ -28,7 +28,11 @@ class zCoin:
             "check_coin":check_coin.check_coin,
             "send_coin":send_coin.send_coin,
             "get_nodes_count":get_nodes.count,
+            "testp2p":self.testrun
             }
+    def testrun(self,obj,data):
+        print "test run!"
+        obj.send(json.dumps({"test":"p2p!!"}))
 
     def firstrun(self):
         print "Generating address and public/private keys"
