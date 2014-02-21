@@ -38,7 +38,7 @@ def get_nodes(obj, data):
 
 def send(god=False):
     if god:
-        nodes = config.brokers
+        nodes = config.seeds
     else:
         nodes = config.nodes.find("nodes", {"relay":1})
         random.shuffle(nodes)

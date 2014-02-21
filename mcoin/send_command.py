@@ -4,15 +4,15 @@ import config
 import random
 
 def send(cmd, out=False, god=False):
-    #print cmd
+    
     if god:
-        nodes = config.brokers
+        nodes = config.seeds # connect to seed nodes (it's called 'seeds')
     else:
-        nodes = config.nodes.find("nodes", {"relay":1})
+        nodes = config.nodes.find("nodes", {"relay":1}) # connect to relay nodes (every node should be relaying lo)
         #print nodes
-        random.shuffle(nodes)
+        random.shuffle(nodes) # randomize nodes (need to remove connecting self)
     if not nodes:
-        nodes = config.brokers
+        nodes = config.seeds
     for x in nodes:
         s = socket.socket()
         try:

@@ -8,6 +8,7 @@ import time
 import hashlib
 import requests # use firebase for an equivalent p2p hack (just to make it work first)
 import json
+import p2p.send_command
 
 ## genesis timestamp
 genesis_ts = 1392697800000
@@ -89,8 +90,10 @@ if __name__ == '__main__':
         print "---"
 
         t = time.time()
-        requests.patch(url, data=json.dumps(dict(ts=ts, hash=data_hash, filename=filename_temp)))
-        print "sync to firebase. took %.3f ms"%((time.time()-t)*1000.)
+        update_state = dict(ts=ts, hash=data_hash, filename=filename_temp, cmd="testp2p")
+        #requests.patch(url, data=json.dumps(update_state))
+        p2p.send_command.send(update_state, god=True)
+        print "sync to nodes. took %.3f ms"%((time.time()-t)*1000.)
     sys.exit(0)
 
 
