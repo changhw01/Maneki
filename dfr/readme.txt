@@ -1,3 +1,6 @@
+# installation mac 10.9
+$ sudo port install opencv +python27
+
 # run stand-alone node (not p2p yet)
 $ python node.py
 
