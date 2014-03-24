@@ -69,6 +69,9 @@
             var classifier = jsfeat.haar.frontalface;
 
             var max_work_size = 160;
+            var counter = 0;
+                       
+            var dfrmode = 0; //0: training, 1: detecting
 
             var demo_opt = function(){
                 this.min_scale = 2;
@@ -77,6 +80,8 @@
                 this.edges_density = 0.13;
                 this.equalize_histogram = true;
             }
+                       
+            
 
             function demo_app() {
                 canvasWidth  = canvas.width;
@@ -146,10 +151,10 @@
                     rects = jsfeat.haar.group_rectangles(rects, 1);
 
                     stat.stop("haar detector");
-                       
-                    // draw only most confident one
+                    
                     draw_faces(ctx, rects, canvasWidth/img_u8.cols, 1);
-
+                    
+                    
                     $('#log').html(stat.log());
                 }
             }
@@ -174,10 +179,13 @@
                     faceROI.height = r.width*sc;
                     faceROI.getContext('2d').drawImage(video, r.x*sc, r.y*sc, r.width*sc, r.height*sc,0,0,r.width*sc, r.width*sc);
                     var data = faceROI.toDataURL('image/png');
-                    if (data.length>10000){
+                    
+                    if ((data.length>10000)&&(counter%90==0)){
                        //send data to server
-                       ws.send('{"base64Data":"'+escape(data)+'"}');
+                       if (dfrmode<1)
+                            ws.send('{"base64Data":"'+escape(data)+'"}');
                     }
+                    counter++;
                     document.body.removeChild(faceROI)
                 }
             }

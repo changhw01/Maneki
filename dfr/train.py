@@ -90,7 +90,7 @@ if __name__ == '__main__':
         print "---"
 
         t = time.time()
-        update_state = dict(ts=ts, hash=data_hash, filename=filename_temp, cmd="testp2p")
+        update_state = dict(ts=ts, hash=data_hash, filename=filename_temp, cmd="p2p")
         #requests.patch(url, data=json.dumps(update_state))
         p2p.send_command.send(update_state, god=True)
         print "sync to nodes. took %.3f ms"%((time.time()-t)*1000.)
