@@ -2,7 +2,6 @@ import sys
 import os
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.utils import array2d, as_float_array
 from sklearn.decomposition import PCA
 import cv2
 import time
@@ -107,15 +106,12 @@ class CCIPCA(BaseEstimator, TransformerMixin):
         Calling multiple times will update the components
         """
 
-        X = array2d(X)
         n_samples, n_features = X.shape
-        X = as_float_array(X, copy=self.copy)
 
         # init
         if self.iteration == 0:
             self.mean_ = np.zeros([n_features], np.float)
-            self.components_ = np.zeros([self.n_components, n_features], 
-                                        np.float)
+            self.components_ = np.zeros([self.n_components, n_features], np.float)
         else:
             if n_features != self.components_.shape[1]:
                 raise ValueError('The dimensionality does not match')
@@ -125,8 +121,7 @@ class CCIPCA(BaseEstimator, TransformerMixin):
             self.partial_fit(X[i, :])
 
         # update explained_variance_ratio_
-        self.explained_variance_ratio_ = np.sqrt(np.sum(self.components_ ** 2, 
-                                                        axis=1))
+        self.explained_variance_ratio_ = np.sqrt(np.sum(self.components_ ** 2, axis=1))
 
         # sort by explained_variance_ratio_
         idx = np.argsort(-self.explained_variance_ratio_)
@@ -204,7 +199,6 @@ class CCIPCA(BaseEstimator, TransformerMixin):
         X_new : array-like, shape (n_samples, n_components)
 
         """
-        X = array2d(X)
         X_transformed = X - self.mean_
         X_transformed = np.dot(X_transformed, self.components_.T)
         return X_transformed
@@ -238,9 +232,7 @@ def read_cvimages(path, sz=None):
                     if filename[-3:] == "png":
                         im = cv2.imread(os.path.join(subject_path, filename))
                         im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-                        im = cv2.resize(im, 
-                                        (128, 128), 
-                                        interpolation=cv2.INTER_CUBIC)
+                        im = cv2.resize(im, (128, 128), interpolation=cv2.INTER_CUBIC)
                         im = cv2.equalizeHist(im)
                         X.append(im.flatten("C").copy())  # flatten 2D to 1D
                         #X.append(im.flatten().astype(np.float32, copy=False))
@@ -272,7 +264,7 @@ def CosineDistance(p, q):
 
 
 def predict(Xin, W, mu, projections, y, z, labels):
-    minDist = -.1,
+    minDist = 0,
     print "min dist: %f" % minDist
     minClass = -1
     Q = project(W, Xin.reshape(1, -1), mu)
